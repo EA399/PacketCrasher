@@ -5,9 +5,9 @@ import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
-import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.util.Hand;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+import net.minecraft.network.protocol.game.ServerboundSwingPacket;
+import net.minecraft.world.InteractionHand;
 
 public class PacketBurst extends Module {
     public enum Mode {
@@ -63,7 +63,7 @@ public class PacketBurst extends Module {
 
     @EventHandler
     private void onTick(TickEvent.Pre event) {
-        if (mc.player == null || mc.getNetworkHandler() == null) return;
+        if (mc.player == null) return;
 
         if (timer > 0) {
             timer--;
@@ -73,10 +73,10 @@ public class PacketBurst extends Module {
 
         for (int i = 0; i < amount.get(); i++) {
             switch (mode.get()) {
-                case Swing -> mc.getNetworkHandler().sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-                case Position -> mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(
+                case Swing -> mc.player.connection.send(new ServerboundSwingPacket(InteractionHand.MAIN_HAND));
+                case Position -> mc.player.connection.send(new ServerboundMovePlayerPacket.Pos(
                     mc.player.getX(), mc.player.getY(), mc.player.getZ(),
-                    mc.player.isOnGround(), mc.player.horizontalCollision));
+                    true, false));
             }
         }
 
