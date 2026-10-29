@@ -7,6 +7,7 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.component.SwingAnimation;
 
 public class PacketBurst extends Module {
     public enum Mode {
@@ -72,7 +73,7 @@ public class PacketBurst extends Module {
 
         for (int i = 0; i < amount.get(); i++) {
             switch (mode.get()) {
-                case Swing -> mc.player.swing(InteractionHand.MAIN_HAND);
+                case Swing -> mc.player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
                 case Position -> mc.player.connection.send(new ServerboundMovePlayerPacket.Pos(
                     mc.player.getX(), mc.player.getY(), mc.player.getZ(),
                     true, false));
