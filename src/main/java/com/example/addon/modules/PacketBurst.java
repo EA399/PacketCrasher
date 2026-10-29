@@ -6,7 +6,6 @@ import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.world.InteractionHand;
 
 public class PacketBurst extends Module {
@@ -73,7 +72,7 @@ public class PacketBurst extends Module {
 
         for (int i = 0; i < amount.get(); i++) {
             switch (mode.get()) {
-                case Swing -> mc.player.connection.send(new ServerboundSwingPacket(InteractionHand.MAIN_HAND));
+                case Swing -> mc.player.swing(InteractionHand.MAIN_HAND);
                 case Position -> mc.player.connection.send(new ServerboundMovePlayerPacket.Pos(
                     mc.player.getX(), mc.player.getY(), mc.player.getZ(),
                     true, false));
